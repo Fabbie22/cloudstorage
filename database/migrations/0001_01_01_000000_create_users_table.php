@@ -35,7 +35,7 @@ return new class extends Migration
             $table->unsignedBigInteger('role_id')->default(2);
 
             // Correct foreign key reference
-            $table->foreign('role_id')->references('id')->on('roles')->onDelete('cascade');
+            $table->foreign('role_id')->references('id')->on('roles')->onDelete('restrict');
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {
