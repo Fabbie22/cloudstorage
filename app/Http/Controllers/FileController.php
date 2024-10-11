@@ -14,6 +14,11 @@ use Illuminate\View\View;
 
 class FileController extends Controller
 {
+    public function read() 
+    {
+        $files = File::where('user_id', auth()->id())->get();
+        return view('files.files', compact('files'));
+    }
 
     public function create()
     {
@@ -42,12 +47,6 @@ class FileController extends Controller
         return redirect(route('files'))->with('status', 'files-uploaded');
     }
 
-    public function read() 
-    {
-        $files = File::where('user_id', auth()->id())->get();
-        return view('files.files', compact('files'));
-    }
-
     public function delete(Request $request, $id)
     {    
         $path = $request->input('path');
@@ -60,5 +59,14 @@ class FileController extends Controller
         $file->delete();
 
         return redirect()->route('files');
+    }
+
+    public function download(Request $request)
+    {
+        $path = $request->input('path');
+        
+        if (Storage::disk('public')->exists($path)) {
+            return Storage::disk('public')->download($path);
+        }
     }
 }

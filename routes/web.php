@@ -23,6 +23,7 @@ Route::middleware('auth')->group(function() {
     Route::get('/files', [FileController::class, 'read'])->name('files');
     Route::post('/files', [FileController::class, 'store'])->name('files.store');
     Route::delete('/files/{id}', [FileController::class, 'delete'])->name('files.delete');
+    Route::post('/files/download', [FileController::class, 'download'])->name('files.download');
 });
 
 require __DIR__.'/auth.php';
