@@ -12,28 +12,70 @@
                     @include('files.partials.upload-files-form')
                 </div>
             </div>
-            @if ($files->isEmpty())
-                <p>No files available.</p>
-            @else
-                @foreach ($files as $file)
-                    <div class="block items-center justify-between">
-                        <p>{{ $file->file_name }}</p>
-                        <form action="{{ route('files.download') }}" method="POST">
-                            @csrf
-                            <input type="hidden" name="path" value="{{ $file->path }}">
-                            <input type="hidden" name="file_name" value="{{ $file->file_name }}">
-                            <button type="submit" class="btn btn-primary">Download File</button>
-                        </form>
-                        <form action="{{ route('files.delete', $file->id) }}" method="POST">
-                            @csrf
-                            @method('DELETE')
-                            <input type="hidden" name="path" value="{{ $file->path }}">
-                            <button type="submit" class="text-red-500">Delete</button>
-                        </form>
-
+            <div class="flex flex-wrap gap-4">
+                @if ($files->isEmpty())
+                    <div
+                        class="bg-white dark:bg-gray-800 mt-4 p-5 w-full text-center rounded-lg border-5 border-indigo-800 shadow">
+                        <p>No files available.</p>
+                        <p>Start uploading files to this amazing app</p>
                     </div>
-                @endforeach
-            @endif
+                @else
+                    @foreach ($files as $file)
+                        <div class="flex-2 items-center justify-between mt-3">
+                            <div
+                                class="flex justify-between bg-gray-800 dark:bg-gray-500 p-3 rounded-lg text-white font-semibold">
+
+                                <form action="{{ route('files.download') }}" method="POST">
+                                    @csrf
+                                    <p>{{ $file->file_name }}</p>
+                                    <input type="hidden" name="path" value="{{ $file->path }}">
+                                    <input type="hidden" name="file_name" value="{{ $file->file_name }}">
+                                </form>
+
+                                <x-dropdown width="32">
+                                    <x-slot name="trigger">
+                                        <div class="ms-1 cursor-pointer">
+                                            <svg class="fill-current h-5 w-5" xmlns="http://www.w3.org/2000/svg"
+                                                viewBox="0 0 24 24">
+                                                <circle cx="12" cy="5" r="2" />
+                                                <circle cx="12" cy="12" r="2" />
+                                                <circle cx="12" cy="19" r="2" />
+                                            </svg>
+                                        </div>
+                                    </x-slot>
+
+                                    <x-slot name="content">
+                                        <form action="{{ route('files.download') }}" method="POST">
+                                            @csrf
+                                            <input type="hidden" name="path" value="{{ $file->path }}">
+                                            <input type="hidden" name="file_name" value="{{ $file->file_name }}">
+
+                                            <x-dropdown-link :href="route('files.download')"
+                                                onclick="event.preventDefault();
+                                                this.closest('form').submit();">
+                                                {{ __('Download') }}
+                                            </x-dropdown-link>
+                                        </form>
+                                        <form method="POST" action="{{ route('files.delete', $file->id) }}">
+                                            @csrf
+                                            @method('DELETE')
+                                            <input type="hidden" name="path" value="{{ $file->path }}">
+
+                                            <x-dropdown-link :href="route('files.delete', $file->id)"
+                                                onclick="event.preventDefault();
+                                                this.closest('form').submit();">
+                                                {{ __('Delete') }}
+                                            </x-dropdown-link>
+                                        </form>
+
+                                    </x-slot>
+                                </x-dropdown>
+                            </div>
+
+                        </div>
+                    @endforeach
+                @endif
+            </div>
         </div>
     </div>
 </x-app-layout>

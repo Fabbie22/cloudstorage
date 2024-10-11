@@ -1,20 +1,13 @@
 <section>
-    <header>
-        <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">
-            {{ __('Upload Files') }}
-        </h2>
-    </header>
-
-    <form method="POST" action="{{ route('files.store') }}" enctype="multipart/form-data" class="mt-6 space-y-6">
+    <form method="POST" action="{{ route('files.store') }}" enctype="multipart/form-data">
         @csrf
 
+        <div class="flex items-center gap-2">
         <div>
-            <x-input-label for="upload_file" :value="__('Upload file')" />
             <x-upload-file id="file" name="file" />
         </div>
 
-        <div class="flex items-center gap-4">
-            <x-primary-button>{{ __('Save') }}</x-primary-button>
+            <x-primary-button>{{ __('Upload') }}</x-primary-button>
 
             @if (session('status') === 'files-uploaded')
                 <p

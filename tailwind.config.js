@@ -14,6 +14,12 @@ export default {
             fontFamily: {
                 sans: ['Figtree', ...defaultTheme.fontFamily.sans],
             },
+            flex: {
+                '2': '0 0 32.3333%'
+            },
+            borderWidth: {
+                '5': '5px'
+            },
         },
     },
 
