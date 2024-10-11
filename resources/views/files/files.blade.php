@@ -53,9 +53,14 @@
                                             <x-dropdown-link :href="route('files.download')"
                                                 onclick="event.preventDefault();
                                                 this.closest('form').submit();">
-                                                {{ __('Download') }}
+                                                <i class="fas fa-download mr-2"></i>{{ __('Download') }}
                                             </x-dropdown-link>
                                         </form>
+
+                                        <x-dropdown-link>
+                                            <i class="fa-solid fa-user-plus mr-2"></i>Share
+                                        </x-dropdown-link>
+
                                         <form method="POST" action="{{ route('files.delete', $file->id) }}">
                                             @csrf
                                             @method('DELETE')
@@ -64,7 +69,7 @@
                                             <x-dropdown-link :href="route('files.delete', $file->id)"
                                                 onclick="event.preventDefault();
                                                 this.closest('form').submit();">
-                                                {{ __('Delete') }}
+                                                <i class="fas fa-trash mr-2"></i>{{ __('Delete') }}
                                             </x-dropdown-link>
                                         </form>
 
