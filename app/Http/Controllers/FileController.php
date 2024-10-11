@@ -12,7 +12,6 @@ use Illuminate\Http\Response; // If you need to manage file downloads/responses
 use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 
-
 class FileController extends Controller
 {
 
@@ -49,8 +48,14 @@ class FileController extends Controller
         return view('files.files', compact('files'));
     }
 
-    public function delete($id)
-    {
+    public function delete(Request $request, $id)
+    {    
+        $path = $request->input('path');
+
+        if (Storage::disk('public')->exists($path)) {
+            Storage::disk('public')->delete($path);
+        }
+
         $file = File::findOrFail($id);
         $file->delete();
 

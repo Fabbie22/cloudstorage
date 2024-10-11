@@ -21,6 +21,7 @@
                         <form action="{{ route('files.delete', $file->id)}}" method="POST">
                             @csrf
                             @method('DELETE')
+                            <input type="hidden" name="path" value="{{ $file->path }}">
                             <button type="submit" class="text-red-500">Delete</button>
                         </form>
                     </div>
