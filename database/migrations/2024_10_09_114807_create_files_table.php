@@ -16,6 +16,9 @@ return new class extends Migration
             $table->string('path');
             $table->timestamps();
             $table->timestamp('deleted_at')->nullable();
+            $table->unsignedBigInteger('user_id');
+
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
 
         Schema::create('shared', function (Blueprint $table) {
@@ -26,15 +29,6 @@ return new class extends Migration
 
             $table->foreign('file_id')->references('id')->on('files')->onDelete('cascade');
         });
-
-        Schema::create('users_has_files', function (Blueprint $table) {
-            $table->unsignedBigInteger('users_id');
-            $table->unsignedBigInteger('files_id');
-            $table->primary(['users_id', 'files_id']);
-            $table->foreign('users_id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('files_id')->references('id')->on('files')->onDelete('cascade');
-        });
-
     }
 
     /**
@@ -42,9 +36,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('users_has_files');
         Schema::dropIfExists('shared');
         Schema::dropIfExists('files');
-        Schema::dropIfExists('deleted_file_properties');
     }
 };

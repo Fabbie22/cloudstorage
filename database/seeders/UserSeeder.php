@@ -27,7 +27,7 @@ class UserSeeder extends Seeder
                 'name' => $faker->userName(),
                 'email' => $faker->unique()->safeEmail(),
                 'password' => Hash::make('password'),
-                'role_id' => $faker->randomElement($roleIds), // Assign a valid role_id
+                'role_id' => 2, // Assign a valid role_id
             ]);
         }
     }
