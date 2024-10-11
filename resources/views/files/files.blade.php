@@ -17,10 +17,11 @@
             @else
                 @foreach ($files as $file)
                     <div class="block items-center justify-between">
-                        <p>{{ $file->path }}</p>
+                        <p>{{ $file->file_name }}</p>
                         <form action="{{ route('files.download') }}" method="POST">
                             @csrf
                             <input type="hidden" name="path" value="{{ $file->path }}">
+                            <input type="hidden" name="file_name" value="{{ $file->file_name }}">
                             <button type="submit" class="btn btn-primary">Download File</button>
                         </form>
                         <form action="{{ route('files.delete', $file->id) }}" method="POST">

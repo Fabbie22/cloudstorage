@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Auth; // If using Auth facade for authenticated u
 use Illuminate\Support\Facades\Storage; // If handling file storage
 use Illuminate\Http\Response; // If you need to manage file downloads/responses
 use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
 class FileController extends Controller
@@ -28,13 +29,16 @@ class FileController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'file' => ['required', 'file', 'mimes:jpg,jpeg,png,pdf', 'max:2048'],
+            'file' => ['required', 'file', 'max:2048'],
         ]);
+
+        $file_name = $request->file('file')->getClientOriginalName();
 
         $path = $request->file('file')->store(auth()->id(), 'public');
 
         $files = File::create([
             'path' => $path,
+            'file_name' => $file_name,
             'user_id'=> auth()->id()
         ]);
 
@@ -58,9 +62,10 @@ class FileController extends Controller
     public function download(Request $request)
     {
         $path = $request->input('path');
+        $file_name = $request->input('file_name');
 
         if (Storage::disk('public')->exists($path)) {
-            return Storage::disk('public')->download($path);
+            return Storage::disk('public')->download($path, $file_name);
         }
     }
 }
