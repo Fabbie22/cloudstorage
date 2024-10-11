@@ -33,16 +33,10 @@ class FileController extends Controller
 
         $path = $request->file('file')->store(auth()->id(), 'public');
 
-        Log::info('File uploaded to: ' . $path);
-
-
         $files = File::create([
             'path' => $path,
             'user_id'=> auth()->id()
         ]);
-
-        Log::info('File saved in DB: ', $files->toArray());
-
 
         return redirect(route('files'))->with('status', 'files-uploaded');
     }
@@ -64,7 +58,7 @@ class FileController extends Controller
     public function download(Request $request)
     {
         $path = $request->input('path');
-        
+
         if (Storage::disk('public')->exists($path)) {
             return Storage::disk('public')->download($path);
         }
