@@ -25,7 +25,7 @@ class ShareController extends Controller
         return view('shared.share');
     }
 
-    public function store(Request $request, $id) // Maybe out of file controller so i can show shared files
+    public function store(Request $request, $id)
     {
         $owner_email = $request->input('owner_email');
         $recipient_email = $request->input('recipient_email');
@@ -35,6 +35,14 @@ class ShareController extends Controller
             'owner_email' => ['required', 'email'],
             'recipient_email' => ['required', 'email']
         ]);
+
+        $fileAlreadyShared = Share::where('file_id', $id)
+            ->where('recipient_email', $request->recipient_email)
+            ->exists();
+
+        if ($fileAlreadyShared) {
+            return redirect()->route('files')->with('status', 'already-shared');
+        }
 
         Share::create([
             'file_id' => $file_id,
