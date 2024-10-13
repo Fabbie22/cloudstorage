@@ -24,6 +24,7 @@ Route::middleware('auth')->group(function() {
     Route::post('/files', [FileController::class, 'store'])->name('files.store');
     Route::delete('/files/{id}', [FileController::class, 'delete'])->name('files.delete');
     Route::post('/files/download', [FileController::class, 'download'])->name('files.download');
+    Route::post('/files/share/{id}', [FileController::class, 'share'])->name('files.share');
 });
 
 require __DIR__.'/auth.php';

@@ -21,11 +21,12 @@ return new class extends Migration
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
 
-        Schema::create('shared', function (Blueprint $table) {
+        Schema::create('shares', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('file_id');
             $table->string('owner_email');
             $table->string('recipient_email');
+            $table->timestamps();
 
             $table->foreign('file_id')->references('id')->on('files')->onDelete('cascade');
         });
@@ -36,7 +37,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('shared');
+        Schema::dropIfExists('shares');
         Schema::dropIfExists('files');
     }
 };
