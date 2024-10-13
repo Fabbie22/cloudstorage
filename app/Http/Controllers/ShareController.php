@@ -17,7 +17,7 @@ class ShareController extends Controller
     public function sharedWithMe()
     {
         $shared_with_me = Share::where('recipient_email', auth()->user()->email)->get();
-        return view('shared.share-with-me', compact('shared_with_me'));
+        return view('shared.shared-with-me', compact('shared_with_me'));
     }
     
     public function create()

@@ -11,7 +11,7 @@
                 <div class="max-w-xl">
                     @foreach ($shared_with_me as $share)
                         <p class="text-white">{{ $share->file->file_name }}</p>
-                        <p class="text-white">Shared with: {{ $share->recipient_email }}</p>
+                        <p class="text-white">Shared by: {{ $share->owner_email }}</p>
                         <p class="text-white">{{ $share->file->path }}</p>
                     @endforeach
                 </div>

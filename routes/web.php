@@ -31,7 +31,7 @@ Route::middleware('auth')->group(function() {
 
 Route::middleware('auth')->group(function() {
     Route::get('/shared', [ShareController::class, 'sharedByMe'])->name('share');
-    Route::get('/shared-with-me', [ShareController::class, 'sharedWithMe'])->name('shared.shared-with-me');
+    Route::get('/shared-with-me', [ShareController::class, 'sharedWithMe'])->name('shared-with-me');
 });
 
 require __DIR__.'/auth.php';
