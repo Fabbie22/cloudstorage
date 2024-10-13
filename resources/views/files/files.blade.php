@@ -25,12 +25,8 @@
                             <div
                                 class="flex justify-between bg-gray-800 dark:bg-gray-500 p-3 rounded-lg text-white font-semibold">
 
-                                <form action="{{ route('files.download') }}" method="POST">
-                                    @csrf
-                                    <p>{{ $file->file_name }}</p>
-                                    <input type="hidden" name="path" value="{{ $file->path }}">
-                                    <input type="hidden" name="file_name" value="{{ $file->file_name }}">
-                                </form>
+                                <p>{{ $file->file_name }}</p>
+                                {{$file->id}}
 
                                 <x-dropdown width="32">
                                     <x-slot name="trigger">
@@ -45,33 +41,15 @@
                                     </x-slot>
 
                                     <x-slot name="content">
-                                        <form action="{{ route('files.download') }}" method="POST">
-                                            @csrf
-                                            <input type="hidden" name="path" value="{{ $file->path }}">
-                                            <input type="hidden" name="file_name" value="{{ $file->file_name }}">
 
-                                            <x-dropdown-link :href="route('files.download')"
-                                                onclick="event.preventDefault();
-                                                this.closest('form').submit();">
-                                                <i class="fas fa-download mr-2"></i>{{ __('Download') }}
-                                            </x-dropdown-link>
-                                        </form>
+                                        @include('files.partials.download-files-form')
 
-                                        <x-dropdown-link>
-                                            <i class="fa-solid fa-user-plus mr-2"></i>Share
+                                        <x-dropdown-link x-data=""
+                                        x-on:click.prevent="$dispatch('open-modal', {{ $file->id }})">
+                                            <i class="fa-solid fa-user-plus mr-2"></i>{{ 'Share' }}
                                         </x-dropdown-link>
 
-                                        <form method="POST" action="{{ route('files.delete', $file->id) }}">
-                                            @csrf
-                                            @method('DELETE')
-                                            <input type="hidden" name="path" value="{{ $file->path }}">
-
-                                            <x-dropdown-link :href="route('files.delete', $file->id)"
-                                                onclick="event.preventDefault();
-                                                this.closest('form').submit();">
-                                                <i class="fas fa-trash mr-2"></i>{{ __('Delete') }}
-                                            </x-dropdown-link>
-                                        </form>
+                                        @include('files.partials.delete-files-form')
 
                                     </x-slot>
                                 </x-dropdown>
@@ -80,6 +58,12 @@
                         </div>
                     @endforeach
                 @endif
+                @foreach ($files as $file => $data)
+
+                    @include('files.partials.share-files-form')
+
+                @endforeach
+
             </div>
         </div>
     </div>
