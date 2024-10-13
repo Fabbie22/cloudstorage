@@ -16,7 +16,7 @@
             @if (session('status') === 'already-shared')
                 <div class="w-full bg-red-500 p-5 rounded-lg mb-4" x-data="{ show: true }" x-show="show" x-transition
                     x-init="setTimeout(() => show = false, 2000)">
-                    <p class="text-lg font-semibold text-white">{{ __('File is already shared!') }}</p>
+                    <p class="text-lg font-semibold text-white">{{ __('File is already shared with the user!') }}</p>
                 </div>
             @endif
             <div class="p-4 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg">
