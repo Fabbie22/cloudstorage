@@ -4,9 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\File;
-use App\Models\Share;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage; // If handling file storage
+use Illuminate\Support\Facades\Storage;
 
 class FileController extends Controller
 {
@@ -62,27 +61,5 @@ class FileController extends Controller
         if (Storage::disk('public')->exists($path)) {
             return Storage::disk('public')->download($path, $file_name);
         }
-    }
-
-    public function share(Request $request, $id)
-    {
-        $owner_email = $request->input('owner_email');
-        $recipient_email = $request->input('recipient_email');
-        $file_id = $id;
-
-        $request->validate([
-            'owner_email' => ['required', 'email'],
-            'recipient_email' => ['required', 'email']
-        ]);
-
-        Share::create([
-            'file_id' => $file_id,
-            'owner_email' => $owner_email,
-            'recipient_email' => $recipient_email
-        ]);
-
-
-        return redirect(route('files'))->with('status', 'file-shared');
-
     }
 }

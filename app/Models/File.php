@@ -11,4 +11,15 @@ class File extends Model
     use HasFactory;
 
     protected $fillable = ['path', 'file_name', 'user_id'];
+
+
+    public function users()
+    {
+        return $this->belongsTo(File::class, 'file_id');
+    }
+
+    public function shares()
+    {
+        return $this->hasMany(Share::class, 'file_id');
+    }
 }

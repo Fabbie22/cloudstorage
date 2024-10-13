@@ -26,6 +26,12 @@
                     <x-nav-link :href="route('files')" :active="request()->routeIs('files')">
                         {{ __('Files') }}
                     </x-nav-link>
+                    <x-nav-link :href="route('share')" :active="request()->routeIs('share')">
+                        {{ __('Shared') }}
+                    </x-nav-link>
+                    <x-nav-link :href="route('shared-with-me')" :active="request()->routeIs('shared-with-me')">
+                        {{ __('Shared with me') }}
+                    </x-nav-link>
                 </div>
             </div>
 

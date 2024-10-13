@@ -11,4 +11,9 @@ class Share extends Model
     use HasFactory;
 
     protected $fillable = ['file_id', 'owner_email', 'recipient_email'];
+
+    public function file()
+    {
+        return $this->belongsTo(File::class, 'file_id');
+    }
 }

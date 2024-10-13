@@ -26,7 +26,6 @@
                                 class="flex justify-between bg-gray-800 dark:bg-gray-500 p-3 rounded-lg text-white font-semibold">
 
                                 <p>{{ $file->file_name }}</p>
-                                {{$file->id}}
 
                                 <x-dropdown width="32">
                                     <x-slot name="trigger">

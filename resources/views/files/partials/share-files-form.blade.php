@@ -1,6 +1,6 @@
 <section>
     <x-modal name="{{ $data->id }}" focusable>
-        <form method="POST" class="mt-6 p-5" action="{{ route('files.share', $data->id) }}">
+        <form method="POST" class="mt-6 p-5" action="{{ route('share.store', $data->id) }}">
             @csrf
 
             <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">
