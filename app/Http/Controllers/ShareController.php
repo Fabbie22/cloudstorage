@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\Share;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 
 class ShareController extends Controller
@@ -12,14 +13,13 @@ class ShareController extends Controller
     {
         $shared = Share::where('owner_email', auth()->user()->email)->get();
         return view('shared.share', compact('shared'));
-
     }
     public function sharedWithMe()
     {
         $shared_with_me = Share::where('recipient_email', auth()->user()->email)->get();
         return view('shared.shared-with-me', compact('shared_with_me'));
     }
-    
+
     public function create()
     {
         return view('shared.share');
@@ -46,8 +46,21 @@ class ShareController extends Controller
         return redirect(route('files'))->with('status', 'file-shared');
     }
 
-    public function delete()
+    public function download(Request $request)
+    {
+        $path = $request->input('path');
+        $file_name = $request->input('file_name');
+
+        if (Storage::disk('public')->exists($path)) {
+            return Storage::disk('public')->download($path, $file_name);
+        }
+    }
+
+    public function delete($id)
     {
 
+
+
+        return redirect()->route('shared-with-me');
     }
 }

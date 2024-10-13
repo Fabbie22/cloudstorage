@@ -7,6 +7,12 @@
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 dark:text-white">
+            @if (session('status') === 'file-shared')
+                <div class="w-full bg-green-500 p-5 rounded-lg mb-4" x-data="{ show: true }" x-show="show" x-transition
+                    x-init="setTimeout(() => show = false, 2000)">
+                    <p class="text-lg font-semibold text-white">{{ __('File Shared!') }}</p>
+                </div>
+            @endif
             <div class="p-4 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg">
                 <div class="max-w-xl">
                     @include('files.partials.upload-files-form')
@@ -23,7 +29,7 @@
                     @foreach ($files as $file)
                         <div class="flex-2 items-center justify-between mt-3">
                             <div
-                                class="flex justify-between bg-gray-800 dark:bg-gray-500 p-3 rounded-lg text-white font-semibold">
+                                class="flex justify-between bg-gray-800 dark:bg-gray-500 p-3 rounded-lg text-white font-semibold dark:hover:!bg-gray-700 hover:bg-gray-400 hover:text-black dark:hover:text-white">
 
                                 <p>{{ $file->file_name }}</p>
 
@@ -44,7 +50,7 @@
                                         @include('files.partials.download-files-form')
 
                                         <x-dropdown-link x-data=""
-                                        x-on:click.prevent="$dispatch('open-modal', {{ $file->id }})">
+                                            x-on:click.prevent="$dispatch('open-modal', {{ $file->id }})">
                                             <i class="fa-solid fa-user-plus mr-2"></i>{{ 'Share' }}
                                         </x-dropdown-link>
 
@@ -58,9 +64,7 @@
                     @endforeach
                 @endif
                 @foreach ($files as $file => $data)
-
                     @include('files.partials.share-files-form')
-
                 @endforeach
 
             </div>
