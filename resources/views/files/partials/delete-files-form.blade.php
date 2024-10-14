@@ -2,7 +2,6 @@
     <form method="POST" action="{{ route('files.delete', $file->id) }}">
         @csrf
         @method('DELETE')
-        <input type="hidden" name="path" value="{{ $file->path }}">
 
         <x-dropdown-link :href="route('files.delete', $file->id)"
             onclick="event.preventDefault();

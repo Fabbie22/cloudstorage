@@ -28,7 +28,7 @@ class FileController extends Controller
 
         $userId = auth()->id();
 
-        $destinationPath = "{$userId}";
+        $destinationPath = "files/{$userId}";
 
         $file = $request->file('file');
 
@@ -44,10 +44,9 @@ class FileController extends Controller
 
         $filePath = $file->storeAs($destinationPath, $finalFilename, 'public');
 
-        // Save the file info to the database
         $fileRecord = new File();
-        $fileRecord->path = $filePath;  // Store the path
-        $fileRecord->user_id = $userId; // Store the user ID
+        $fileRecord->path = $filePath;
+        $fileRecord->user_id = $userId;
         $fileRecord->save();
 
         return redirect(route('files'))->with('status', 'files-uploaded');
@@ -55,13 +54,25 @@ class FileController extends Controller
 
     public function delete(Request $request, $id)
     {    
-        $path = $request->input('path');
+        $file = File::findOrFail($id);
+
+        $path = $file->path;
 
         if (Storage::disk('public')->exists($path)) {
             Storage::disk('public')->delete($path);
         }
 
         $file = File::findOrFail($id);
+
+        $extension = pathinfo($path, PATHINFO_EXTENSION);
+
+        $newBasename = uniqid() . '.' . $extension;
+
+        $newPath = time() . '_' . $newBasename;
+
+        $file->path = $newPath;
+        $file->save();
+
         $file->delete();
 
         return redirect()->route('files')->with('status', 'files-deleted');
