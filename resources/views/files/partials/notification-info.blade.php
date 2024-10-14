@@ -17,4 +17,10 @@
             <p class="text-lg font-semibold text-white">{{ __('File uploaded!') }}</p>
         </div>
     @endif
+        @if (session('status') === 'files-deleted')
+        <div class="w-full bg-green-500 p-5 rounded-lg mb-4" x-data="{ show: true }" x-show="show" x-transition
+            x-init="setTimeout(() => show = false, 2000)">
+            <p class="text-lg font-semibold text-white">{{ __('File deleted successfully!') }}</p>
+        </div>
+    @endif
 </section>

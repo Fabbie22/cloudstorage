@@ -64,7 +64,7 @@ class FileController extends Controller
         $file = File::findOrFail($id);
         $file->delete();
 
-        return redirect()->route('files');
+        return redirect()->route('files')->with('status', 'files-deleted');
     }
 
     public function download(Request $request)
