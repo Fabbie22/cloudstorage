@@ -33,6 +33,7 @@ Route::middleware('auth')->group(function() {
     Route::get('/shared', [ShareController::class, 'sharedByMe'])->name('share');
     Route::get('/shared-with-me', [ShareController::class, 'sharedWithMe'])->name('shared-with-me');
     Route::post('/shared-with-me/download', [FileController::class, 'download'])->name('shared-with-me.download');
+    Route::delete('/shared/{id}', [ShareController::class, 'delete'])->name('shared.delete');
 });
 
 require __DIR__.'/auth.php';

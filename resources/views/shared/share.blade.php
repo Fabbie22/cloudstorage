@@ -5,8 +5,15 @@
         </h2>
     </x-slot>
 
+
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 dark:text-white">
+            @if (session('status') === 'share-deleted')
+                <div class="w-full bg-green-500 p-5 rounded-lg mb-4" x-data="{ show: true }" x-show="show" x-transition
+                    x-init="setTimeout(() => show = false, 2000)">
+                    <p class="text-lg font-semibold text-white">{{ __('Share deleted successfully!') }}</p>
+                </div>
+            @endif
             @if ($shared->isEmpty())
                 <div
                     class="bg-white dark:bg-gray-800 mt-4 p-5 w-full text-center rounded-lg border-5 border-indigo-800 shadow">
@@ -49,13 +56,17 @@
                                             </div>
                                         </x-slot>
 
-                                        {{-- :href="route('files.delete', $file - > id)"
-                                        onclick="event.preventDefault();
-                                                this.closest('form').submit();" --}}
                                         <x-slot name="content">
-                                            <x-dropdown-link>
-                                                <i class="fas fa-trash mr-2"></i>{{ __('Delete') }}
-                                            </x-dropdown-link>
+                                            <form method="POST" action="{{ route('shared.delete', $data->id) }}">
+                                                @csrf
+                                                @method('DELETE')
+
+                                                <x-dropdown-link :href="route('shared.delete', $data->id)"
+                                                    onclick="event.preventDefault();
+                                                this.closest('form').submit();">
+                                                    <i class="fas fa-trash mr-2"></i>{{ __('Delete') }}
+                                                </x-dropdown-link>
+                                            </form>
                                         </x-slot>
                                     </x-dropdown>
                                 </td>

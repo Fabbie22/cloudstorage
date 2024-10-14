@@ -66,9 +66,9 @@ class ShareController extends Controller
 
     public function delete($id)
     {
+        $share = Share::findOrFail($id);
+        $share->delete();
 
-
-
-        return redirect()->route('shared-with-me');
+        return redirect()->route('share')->with('status', 'share-deleted');
     }
 }
