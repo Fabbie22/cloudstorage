@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\Share;
+use App\Models\User;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 
@@ -35,6 +36,12 @@ class ShareController extends Controller
             'owner_email' => ['required', 'email'],
             'recipient_email' => ['required', 'email']
         ]);
+
+        $recipientExists = User::where('email', $recipient_email)->exists();
+
+        if (!$recipientExists) {
+            return redirect()->route('files')->with('status', 'recipient-not-found');
+        }
 
         $fileAlreadyShared = Share::where('file_id', $id)
             ->where('recipient_email', $request->recipient_email)
