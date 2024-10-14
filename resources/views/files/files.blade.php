@@ -7,18 +7,7 @@
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 dark:text-white">
-            @if (session('status') === 'file-shared')
-                <div class="w-full bg-green-500 p-5 rounded-lg mb-4" x-data="{ show: true }" x-show="show" x-transition
-                    x-init="setTimeout(() => show = false, 2000)">
-                    <p class="text-lg font-semibold text-white">{{ __('File Shared!') }}</p>
-                </div>
-            @endif
-            @if (session('status') === 'already-shared')
-                <div class="w-full bg-red-500 p-5 rounded-lg mb-4" x-data="{ show: true }" x-show="show" x-transition
-                    x-init="setTimeout(() => show = false, 2000)">
-                    <p class="text-lg font-semibold text-white">{{ __('File is already shared with the user!') }}</p>
-                </div>
-            @endif
+            @include('files.partials.notification-info')
             <div class="p-4 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg">
                 <div class="max-w-xl">
                     @include('files.partials.upload-files-form')
