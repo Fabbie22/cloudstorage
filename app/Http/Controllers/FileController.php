@@ -26,15 +26,29 @@ class FileController extends Controller
             'file' => ['required', 'file', 'max:2048'],
         ]);
 
-        $file_name = $request->file('file')->getClientOriginalName();
+        $userId = auth()->id();
 
-        $path = $request->file('file')->store(auth()->id(), 'public');
+        $destinationPath = "{$userId}";
 
-        $files = File::create([
-            'path' => $path,
-            'file_name' => $file_name,
-            'user_id'=> auth()->id()
-        ]);
+        $file = $request->file('file');
+
+        $extension = $file->getClientOriginalExtension();
+        $baseFilename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+        $finalFilename = "{$baseFilename}.{$extension}";
+
+        $counter = 1;
+        while (Storage::disk('public')->exists("{$destinationPath}/{$finalFilename}")) {
+            $finalFilename = "{$baseFilename}({$counter}).{$extension}";
+            $counter++;
+        }
+
+        $filePath = $file->storeAs($destinationPath, $finalFilename, 'public');
+
+        // Save the file info to the database
+        $fileRecord = new File();
+        $fileRecord->path = $filePath;  // Store the path
+        $fileRecord->user_id = $userId; // Store the user ID
+        $fileRecord->save();
 
         return redirect(route('files'))->with('status', 'files-uploaded');
     }
@@ -56,7 +70,7 @@ class FileController extends Controller
     public function download(Request $request)
     {
         $path = $request->input('path');
-        $file_name = $request->input('file_name');
+        $file_name = basename($path);
 
         if (Storage::disk('public')->exists($path)) {
             return Storage::disk('public')->download($path, $file_name);

@@ -33,7 +33,7 @@
                     <tbody>
                         @foreach ($shared_with_me as $shared => $data)
                             <tr class="bg-gray-800 dark:bg-gray-500 text-white hover:!bg-gray-700">
-                                <td class="p-3">{{ $data->file->file_name }}</td>
+                                <td class="p-3">{{ basename($data->file->path) }}</td>
                                 <td class="p-3">{{ $data->created_at->format('d-m-Y') }}</td>
                                 <td class="p-3">{{ $data->owner_email }}</td>
                                 <td class="p-3 text-right">

@@ -57,7 +57,7 @@ class ShareController extends Controller
     public function download(Request $request)
     {
         $path = $request->input('path');
-        $file_name = $request->input('file_name');
+        $file_name = basename($path);
 
         if (Storage::disk('public')->exists($path)) {
             return Storage::disk('public')->download($path, $file_name);

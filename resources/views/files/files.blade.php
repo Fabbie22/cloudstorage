@@ -37,7 +37,7 @@
                             <div
                                 class="flex justify-between bg-gray-800 dark:bg-gray-500 p-3 rounded-lg text-white font-semibold dark:hover:!bg-gray-700 hover:bg-gray-400 hover:text-black dark:hover:text-white">
 
-                                <p>{{ $file->file_name }}</p>
+                                <p>{{ basename($file->path) }}</p>
 
                                 <x-dropdown width="32">
                                     <x-slot name="trigger">
