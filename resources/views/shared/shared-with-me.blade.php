@@ -50,7 +50,7 @@
                                         </x-slot>
 
                                         <x-slot name="content">
-                                            @include('shared.partials.download-shared-files-form')
+                                            @include('shared.partials.download-shared-me-files-form')
                                         </x-slot>
                                     </x-dropdown>
                                 </td>

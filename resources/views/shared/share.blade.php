@@ -57,16 +57,7 @@
                                         </x-slot>
 
                                         <x-slot name="content">
-                                            <form method="POST" action="{{ route('shared.delete', $data->id) }}">
-                                                @csrf
-                                                @method('DELETE')
-
-                                                <x-dropdown-link :href="route('shared.delete', $data->id)"
-                                                    onclick="event.preventDefault();
-                                                this.closest('form').submit();">
-                                                    <i class="fas fa-trash mr-2"></i>{{ __('Delete') }}
-                                                </x-dropdown-link>
-                                            </form>
+                                            @include('shared.partials.delete-shared-files-form')
                                         </x-slot>
                                     </x-dropdown>
                                 </td>

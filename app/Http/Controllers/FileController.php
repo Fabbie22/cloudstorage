@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Models\File;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Storage;
 
 class FileController extends Controller
@@ -52,17 +53,15 @@ class FileController extends Controller
         return redirect(route('files'))->with('status', 'files-uploaded');
     }
 
-    public function delete(Request $request, $id)
+    public function delete($id) //Maybe encrypt ID
     {    
-        $file = File::findOrFail($id);
+        $file = File::findOrFail(Crypt::decryptString($id));
 
         $path = $file->path;
 
         if (Storage::disk('public')->exists($path)) {
             Storage::disk('public')->delete($path);
         }
-
-        $file = File::findOrFail($id);
 
         $extension = pathinfo($path, PATHINFO_EXTENSION);
 
@@ -80,7 +79,7 @@ class FileController extends Controller
 
     public function download(Request $request)
     {
-        $path = $request->input('path');
+        $path = Crypt::decryptString($request->input('path'));
         $file_name = basename($path);
 
         if (Storage::disk('public')->exists($path)) {

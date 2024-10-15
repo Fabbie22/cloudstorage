@@ -7,6 +7,7 @@ use App\Models\Share;
 use App\Models\User;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Crypt;
 
 class ShareController extends Controller
 {
@@ -63,7 +64,7 @@ class ShareController extends Controller
 
     public function download(Request $request)
     {
-        $path = $request->input('path');
+        $path = Crypt::decryptString($request->input('path'));
         $file_name = basename($path);
 
         if (Storage::disk('public')->exists($path)) {
@@ -71,9 +72,9 @@ class ShareController extends Controller
         }
     }
 
-    public function delete($id)
+    public function delete($id) //Maybe encrypt ID
     {
-        $share = Share::findOrFail($id);
+        $share = Share::findOrFail(Crypt::decryptString($id));
         $share->delete();
 
         return redirect()->route('share')->with('status', 'share-deleted');
