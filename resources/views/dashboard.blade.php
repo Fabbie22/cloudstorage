@@ -18,6 +18,8 @@
                     <div><canvas id="registration_chart"
                             class="bg-white rounded-lg shadow-md pr-4 pb-4 max-h-72 "></canvas></div>
                     <div><canvas id="fileTypesChart" class="bg-white rounded-lg shadow-md pr-4 pb-4 max-h-72"></canvas>
+
+                    <div class="mt-4"><canvas id="averageTimeChart" class="bg-white rounded-lg shadow-md pr-4 pb-4 max-h-72"></canvas>
                     </div>
 
                 </div>
@@ -113,6 +115,44 @@
                 document.getElementById('fileTypesChart'),
                 fileTypesConfig
             );
+
+    // Average time files are saved chart
+    const averageTimeData = {
+        labels: ['Average Time Saved'],
+        datasets: [{
+            label: 'Average Days Files Are Saved',
+            backgroundColor: 'rgba(153, 102, 255, 0.3)',
+            borderColor: 'rgba(153, 102, 255, 1)',
+            data: [{{ $averageTimeSaved }}], // Inject the calculated average time
+        }]
+    };
+
+    const averageTimeConfig = {
+        type: 'bar',
+        data: averageTimeData,
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Days'
+                    }
+                }
+            },
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Average Days Files Are Saved Before Deletion'
+                }
+            }
+        }
+    };
+
+    const averageTimeChart = new Chart(
+        document.getElementById('averageTimeChart'),
+        averageTimeConfig
+    );
         </script>
     @endpush
 

@@ -17,6 +17,12 @@
                 </div>
             @break
 
+            @case('own-email')
+                <div class="w-full bg-red-500 p-5 rounded-lg mb-4">
+                    <p class="text-lg font-semibold text-white">{{ __('You cannot share with yourself') }}</p>
+                </div>
+            @break
+
             @case('files-uploaded')
                 <div class="w-full bg-green-500 p-5 rounded-lg mb-4">
                     <p class="text-lg font-semibold text-white">{{ __('File uploaded!') }}</p>

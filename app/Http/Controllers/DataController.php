@@ -4,38 +4,51 @@ namespace App\Http\Controllers;
 
 use App\Models\File;
 use App\Models\User;
+use Carbon\Carbon;
 
 class DataController extends Controller
 {
     public function dashboard()
     {
-        // Retrieve all files and users
-        $files = File::all(); // Fetch all files
+        $files = File::all();
+        
+        //Users registrated in 30 days time
         $userRegistrationData = User::selectRaw('DATE(created_at) as date, COUNT(*) as aggregate')
-        ->where('created_at', '>=', now()->subDays(30)) // Filter for last 30 days
-        ->groupBy('date')
-        ->orderBy('date')
-        ->get();
+            ->where('created_at', '>=', now()->subDays(30))
+            ->groupBy('date')
+            ->orderBy('date')
+            ->get();
 
-        // Step 2: Map the files to get their types and count them
+
+        //Amount of file types
         $fileTypesData = $files->map(function ($file) {
             return [
-                'file_type' => pathinfo($file->path, PATHINFO_EXTENSION), // Extract file type from the path
+                'file_type' => pathinfo($file->path, PATHINFO_EXTENSION),
             ];
-        })->groupBy('file_type') // Group the results by file type
-          ->map(function ($group) {
-              return count($group); // Count the occurrences of each file type
-          });
+        })->groupBy('file_type')
+            ->map(function ($group) {
+                return count($group);
+            });
 
-        // Step 3: Convert the data to a format suitable for the chart
         $fileTypesData = $fileTypesData->map(function ($count, $type) {
             return [
-                'file_type' => $type, // The file type (extension)
-                'total' => $count, // The count of files of this type
+                'file_type' => $type,
+                'total' => $count,
             ];
-        })->values(); // Reset the keys to make it a numerically indexed array
+        })->values();
 
-        // Return the data to the dashboard view
-        return view('dashboard', compact('files', 'userRegistrationData', 'fileTypesData'));
+        //Deleted Average time
+        $records = File::onlyTrashed()->get();
+
+        $data = $records->map(function ($record) {
+            $created = Carbon::parse($record->created_at->format('d-m-Y'));
+            $deleted = Carbon::parse($record->deleted_at->format('d-m-Y'));
+
+            return $created->diffInDays($deleted);
+        });
+
+        $averageTimeSaved = $data->isNotEmpty() ? $data->avg() : 0;
+
+        return view('dashboard', compact('files', 'userRegistrationData', 'fileTypesData', 'averageTimeSaved'));
     }
 }

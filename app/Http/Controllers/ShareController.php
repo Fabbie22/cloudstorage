@@ -52,6 +52,10 @@ class ShareController extends Controller
             return redirect()->route('files')->with('status', 'already-shared');
         }
 
+        if ($recipient_email === $owner_email) {
+            return redirect()->route('files')->with('status', 'own-email');
+        }
+
         Share::create([
             'file_id' => $file_id,
             'owner_email' => $owner_email,
