@@ -8,10 +8,10 @@ use Carbon\Carbon;
 
 class DataController extends Controller
 {
-    public function dashboard()
+    public function dashboard_statistics()
     {
         $files = File::all();
-        
+
         //Users registrated in 30 days time
         $userRegistrationData = User::selectRaw('DATE(created_at) as date, COUNT(*) as aggregate')
             ->where('created_at', '>=', now()->subDays(30))
@@ -56,7 +56,14 @@ class DataController extends Controller
         });
         $averageTimeSaved = $overallData->isNotEmpty() ? $overallData->avg() : 0;
 
-        return view('dashboard', compact('files', 'userRegistrationData', 'fileTypesData', 'averageTimeSaved', 'averageTimePerMonth'));
+        $userId = auth()->user()->id;
+
+        $recent_files = File::where('created_at', '>=', Carbon::now()->subDays(3))
+            ->where('user_id', $userId)
+            ->limit(5)
+            ->get();
+
+        return view('dashboard', compact('files', 'recent_files', 'userRegistrationData', 'fileTypesData', 'averageTimeSaved', 'averageTimePerMonth'));
     }
 
     public function allUsers()
@@ -67,6 +74,14 @@ class DataController extends Controller
 
         $filecount = File::count();
 
-        return view('userlist', compact('users', 'usercount', 'filecount'));
+        return view('userlist', compact('users', 'usercount', 'filecount', 'recent_files'));
+    }
+
+    public function recent_files()
+    {
+
+
+        // Return the view with recent files
+        return view('dashboard', compact('recent_files'));
     }
 }

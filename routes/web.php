@@ -13,7 +13,7 @@ Route::get('/', function () {
 });
 
 Route::middleware('auth', 'verified')->group(function () {
-    Route::get('/dashboard', [DataController::class, 'dashboard'])->name('dashboard');
+    Route::get('/dashboard', [DataController::class, 'dashboard_statistics'])->name('dashboard');
     Route::get('/user-list', [DataController::class, 'allUsers'])->name('user-list');
 });
 
