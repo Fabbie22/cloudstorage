@@ -20,7 +20,8 @@ class DataController extends Controller
             ->get();
 
 
-        //Amount of file types
+        $files = File::withTrashed()->get();
+
         $fileTypesData = $files->map(function ($file) {
             return [
                 'file_type' => pathinfo($file->path, PATHINFO_EXTENSION),
@@ -36,7 +37,7 @@ class DataController extends Controller
                 'total' => $count,
             ];
         })->values();
-
+        
         //Deleted Average time
         $records = File::onlyTrashed()->get();
 
