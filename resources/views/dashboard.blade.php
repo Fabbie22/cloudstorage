@@ -6,8 +6,12 @@
     </x-slot>
 
     <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 dark:text-white">
+            @if (auth()->user()->hasRole(1))
+                {{__('Hallo Admin')}}
+                @else
+                {{__('Hallo User')}}
+            @endif
         </div>
     </div>
 </x-app-layout>

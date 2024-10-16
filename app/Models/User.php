@@ -50,4 +50,9 @@ class User extends Authenticatable
     {
         return $this->hasMany(File::class);
     }
+    
+    public function hasRole($role_id)
+    {
+        return $this->role_id === $role_id;
+    }
 }
