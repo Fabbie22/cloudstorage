@@ -63,6 +63,8 @@ class DataController extends Controller
     {
         $users = User::paginate(20);
 
-        return view('userlist', compact('users'));
+        $usercount = User::count();
+
+        return view('userlist', compact('users', 'usercount'));
     }
 }

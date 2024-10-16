@@ -24,6 +24,7 @@
                 @else
                     <div class="mb-4">
                         {{ $users->links() }}
+                        {{ 'Currently we have: ' . $usercount . ' users' }}
                     </div>
                     <table class="min-w-full table-auto rounded-lg shadow">
                         <thead class="bg-gray-800 dark:bg-gray-500 text-white font-semibold rounded-t-lg">
