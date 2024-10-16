@@ -65,6 +65,8 @@ class DataController extends Controller
 
         $usercount = User::count();
 
-        return view('userlist', compact('users', 'usercount'));
+        $filecount = File::count();
+
+        return view('userlist', compact('users', 'usercount', 'filecount'));
     }
 }

@@ -23,10 +23,10 @@
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                         {{ __('Dashboard') }}
                     </x-nav-link>
-                    @if ((auth()->user()->hasRole(1)))
-                    <x-nav-link :href="route('user-list')" :active="request()->routeIs('user-list')">
-                        {{ __('Users') }}
-                    </x-nav-link>
+                    @if (auth()->user()->hasRole(1))
+                        <x-nav-link :href="route('user-list')" :active="request()->routeIs('user-list')">
+                            {{ __('Users') }}
+                        </x-nav-link>
                     @endif
                     <x-nav-link :href="route('files')" :active="request()->routeIs('files')">
                         {{ __('Files') }}
@@ -114,6 +114,11 @@
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
+            @if ((auth()->user()->hasRole(1)))
+            <x-responsive-nav-link :href="route('user-list')" :active="request()->routeIs('user-list')">
+                {{ __('Users') }}
+            </x-responsive-nav-link>
+            @endif
             <x-responsive-nav-link :href="route('files')" :active="request()->routeIs('files')">
                 {{ __('Files') }}
             </x-responsive-nav-link>

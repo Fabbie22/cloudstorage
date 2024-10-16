@@ -9,12 +9,6 @@
 
         <div class="py-12">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 dark:text-white">
-                @if (session('status') === 'share-deleted')
-                    <div class="w-full bg-green-500 p-5 rounded-lg mb-4" x-data="{ show: true }" x-show="show"
-                        x-transition x-init="setTimeout(() => show = false, 2000)">
-                        <p class="text-lg font-semibold text-white">{{ __('Share deleted successfully!') }}</p>
-                    </div>
-                @endif
                 @if ($users->isEmpty())
                     <div
                         class="bg-white dark:bg-gray-800 mt-4 p-5 w-full text-center rounded-lg border-5 border-indigo-800 shadow">
@@ -24,7 +18,8 @@
                 @else
                     <div class="mb-4">
                         {{ $users->links() }}
-                        {{ 'Currently we have: ' . $usercount . ' users' }}
+                        <p>{!! 'Currently we have: <strong>' . $usercount . '</strong> users' !!}</p>
+                        <p>{!! 'Who save all together: <strong>' . $filecount . '</strong> files'!!}</p>
                     </div>
                     <table class="min-w-full table-auto rounded-lg shadow">
                         <thead class="bg-gray-800 dark:bg-gray-500 text-white font-semibold rounded-t-lg">
