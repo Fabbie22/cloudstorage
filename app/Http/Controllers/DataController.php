@@ -37,19 +37,25 @@ class DataController extends Controller
                 'total' => $count,
             ];
         })->values();
-        
-        //Deleted Average time
-        $records = File::onlyTrashed()->get();
 
-        $data = $records->map(function ($record) {
-            $created = Carbon::parse($record->created_at->format('d-m-Y'));
-            $deleted = Carbon::parse($record->deleted_at->format('d-m-Y'));
+        // Calculate average time from creation to deletion (for trashed files only) by month
+        $deletedRecords = File::onlyTrashed()->get();
 
-            return $created->diffInDays($deleted);
+        $averageTimePerMonth = $deletedRecords->groupBy(function ($record) {
+            return Carbon::parse($record->deleted_at)->format('m-Y'); // Group by month
+        })->map(function ($group) {
+            $daysDiff = $group->map(function ($record) {
+                return $record->created_at->diffInDays($record->deleted_at); // Calculate days between creation and deletion
+            });
+            return $daysDiff->isNotEmpty() ? $daysDiff->avg() : 0; // Calculate average per month
         });
 
-        $averageTimeSaved = $data->isNotEmpty() ? $data->avg() : 0;
+        // Overall average deletion time
+        $overallData = $deletedRecords->map(function ($record) {
+            return $record->created_at->diffInDays($record->deleted_at); // Calculate days between creation and deletion
+        });
+        $averageTimeSaved = $overallData->isNotEmpty() ? $overallData->avg() : 0;
 
-        return view('dashboard', compact('files', 'userRegistrationData', 'fileTypesData', 'averageTimeSaved'));
+        return view('dashboard', compact('files', 'userRegistrationData', 'fileTypesData', 'averageTimeSaved', 'averageTimePerMonth'));
     }
 }

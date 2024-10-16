@@ -73,7 +73,7 @@
             const fileTypesData = {
                 labels: @json($fileTypesData->pluck('file_type')), // Extract file types
                 datasets: [{
-                    label: 'File Types Distribution',
+                    label: 'File Types Saved',
                     backgroundColor: [
                         'rgba(255, 99, 132, 0.3)',
                         'rgba(54, 162, 235, 0.3)',
@@ -105,7 +105,7 @@
                         },
                         title: {
                             display: true,
-                            text: 'Distribution of File Types'
+                            text: 'Saving of File Types'
                         }
                     }
                 }
@@ -116,43 +116,42 @@
                 fileTypesConfig
             );
 
-    // Average time files are saved chart
-    const averageTimeData = {
-        labels: ['Average Time Saved'],
-        datasets: [{
-            label: 'Average Days Files Are Saved',
-            backgroundColor: 'rgba(153, 102, 255, 0.3)',
-            borderColor: 'rgba(153, 102, 255, 1)',
-            data: [{{ $averageTimeSaved }}], // Inject the calculated average time
-        }]
-    };
+const averageTimeData = {
+    labels: @json($averageTimePerMonth->keys()), // Month labels (e.g., '2024-10')
+    datasets: [{
+        label: 'Average Days Files Are Saved',
+        backgroundColor: 'rgba(153, 102, 255, 0.3)',
+        borderColor: 'rgba(153, 102, 255, 1)',
+        data: @json($averageTimePerMonth->values()), // Average days for each month
+    }]
+};
 
-    const averageTimeConfig = {
-        type: 'bar',
-        data: averageTimeData,
-        options: {
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    title: {
-                        display: true,
-                        text: 'Days'
-                    }
-                }
-            },
-            plugins: {
+const averageTimeConfig = {
+    type: 'bar',
+    data: averageTimeData,
+    options: {
+        scales: {
+            y: {
+                beginAtZero: true,
                 title: {
                     display: true,
-                    text: 'Average Days Files Are Saved Before Deletion'
+                    text: 'Days'
                 }
             }
+        },
+        plugins: {
+            title: {
+                display: true,
+                text: 'Average Days Files Are Saved Before Deletion (Per Month)'
+            }
         }
-    };
+    }
+};
 
-    const averageTimeChart = new Chart(
-        document.getElementById('averageTimeChart'),
-        averageTimeConfig
-    );
+const averageTimeChart = new Chart(
+    document.getElementById('averageTimeChart'),
+    averageTimeConfig
+);
         </script>
     @endpush
 
