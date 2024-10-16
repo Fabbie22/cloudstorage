@@ -53,7 +53,7 @@ class FileController extends Controller
         return redirect(route('files'))->with('status', 'files-uploaded');
     }
 
-    public function delete($id) //Maybe encrypt ID
+    public function delete($id)
     {    
         $file = File::findOrFail(Crypt::decryptString($id));
 
