@@ -14,7 +14,7 @@
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 dark:text-white">
             @if (auth()->user()->hasRole(1))
-                <div class="grid grid-cols-2 gap-4">
+                <div class="grid grid-cols-1 w-full sm:grid-cols-2 gap-4">
                     <div><canvas id="registration_chart"
                             class="bg-white rounded-lg shadow-md pr-4 pb-4 max-h-72 "></canvas></div>
                     <div><canvas id="fileTypesChart" class="bg-white rounded-lg shadow-md pr-4 pb-4 max-h-72"></canvas>

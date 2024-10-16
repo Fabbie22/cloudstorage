@@ -109,6 +109,15 @@
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('files')" :active="request()->routeIs('files')">
+                {{ __('Files') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('share')" :active="request()->routeIs('share')">
+                {{ __('Shared') }}
+            </x-responsive-nav-link>
+            <x-responsive-nav-link :href="route('shared-with-me')" :active="request()->routeIs('shared-with-me')">
+                {{ __('Shared with me') }}
+            </x-responsive-nav-link>
         </div>
 
         <!-- Responsive Settings Options -->

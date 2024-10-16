@@ -13,7 +13,7 @@
                     @include('files.partials.upload-files-form')
                 </div>
             </div>
-            <div class="flex flex-wrap gap-4">
+            <div class="block sm:flex sm:flex-wrap gap-4">
                 @if ($files->isEmpty())
                     <div
                         class="bg-white dark:bg-gray-800 mt-4 p-5 w-full text-center rounded-lg border-5 border-indigo-800 shadow">
@@ -22,7 +22,7 @@
                     </div>
                 @else
                     @foreach ($files as $file)
-                        <div class="flex-2 items-center justify-between mt-3">
+                        <div class="sm:flex-2 block items-center justify-between mt-3">
                             <div
                                 class="flex justify-between bg-gray-800 dark:bg-gray-500 p-3 rounded-lg text-white font-semibold dark:hover:!bg-gray-700 hover:bg-gray-400 hover:text-black dark:hover:text-white">
 
