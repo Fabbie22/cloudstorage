@@ -58,9 +58,8 @@ class DataController extends Controller
 
         $userId = auth()->user()->id;
 
-        $recent_files = File::where('created_at', '>=', Carbon::now()->subDays(3))
+        $recent_files = File::where('created_at', '>=', Carbon::now()->subDays(1))
             ->where('user_id', $userId)
-            ->limit(5)
             ->get();
 
         return view('dashboard', compact('files', 'recent_files', 'userRegistrationData', 'fileTypesData', 'averageTimeSaved', 'averageTimePerMonth'));
@@ -74,14 +73,6 @@ class DataController extends Controller
 
         $filecount = File::count();
 
-        return view('userlist', compact('users', 'usercount', 'filecount', 'recent_files'));
-    }
-
-    public function recent_files()
-    {
-
-
-        // Return the view with recent files
-        return view('dashboard', compact('recent_files'));
+        return view('userlist', compact('users', 'usercount', 'filecount'));
     }
 }
