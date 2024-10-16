@@ -58,4 +58,11 @@ class DataController extends Controller
 
         return view('dashboard', compact('files', 'userRegistrationData', 'fileTypesData', 'averageTimeSaved', 'averageTimePerMonth'));
     }
+
+    public function allUsers()
+    {
+        $users = User::paginate(20);
+
+        return view('userlist', compact('users'));
+    }
 }

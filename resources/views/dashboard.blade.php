@@ -24,7 +24,7 @@
 
                 </div>
             @else
-                {{ __('Hallo User') }}
+            
             @endif
         </div>
     </div>
