@@ -46,7 +46,7 @@
                                         @include('files.partials.download-files-form')
 
                                         <x-dropdown-link class="cursor-pointer" x-data=""
-                                            x-on:click.prevent="$dispatch('open-modal', {{ $file->id }})">
+                                            x-on:click.prevent="$dispatch('open-modal', '{{ basename($file->path) }}')">
                                             <i class="fa-solid fa-user-plus mr-2"></i>{{ 'Share' }}
                                         </x-dropdown-link>
 

@@ -1,5 +1,5 @@
 <section>
-    <x-modal name="{{ $data->id }}" focusable>
+    <x-modal name="{{ basename($data->path) }}" focusable>
         <form method="POST" class="mt-6 p-5" action="{{ route('share.store', Crypt::encryptString($data->id)) }}">
             @csrf
 
