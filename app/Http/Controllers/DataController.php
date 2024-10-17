@@ -65,8 +65,21 @@ class DataController extends Controller
         $savedFilesCount = File::withoutTrashed()->count();
         $removedFilesCount = File::onlyTrashed()->count();
 
-        
-        return view('dashboard', compact('files', 'recent_files', 'userRegistrationData', 'fileTypesData', 'averageTimeSaved', 'averageTimePerMonth', 'savedFilesCount', 'removedFilesCount'));
+        // Calculate total file size used in MB
+        $totalFileSizeBytes = 0;
+        $files = File::withoutTrashed()->get(); // Get all saved files
+
+        foreach ($files as $file) {
+            $filePath = storage_path('app/public' . $file->path); // Assuming your files are stored in the storage/app directory
+            if (file_exists($filePath)) {
+                $totalFileSizeBytes += filesize($filePath); // Add the file size to the total
+            }
+        }
+
+        // Convert total file size from bytes to megabytes
+        $totalFileSizeMB = $totalFileSizeBytes / 1024; 
+
+        return view('dashboard', compact('files', 'recent_files', 'userRegistrationData', 'fileTypesData', 'averageTimeSaved', 'averageTimePerMonth', 'savedFilesCount', 'removedFilesCount', 'totalFileSizeMB'));
     }
 
     public function allUsers()
