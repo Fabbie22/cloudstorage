@@ -29,12 +29,11 @@ class ShareController extends Controller
 
     public function store(Request $request, $id)
     {
-        $owner_email = $request->input('owner_email');
+        $owner_email = auth()->user()->email;
         $recipient_email = $request->input('recipient_email');
-        $file_id = $id;
+        $file_id = Crypt::decryptString($id);
 
         $request->validate([
-            'owner_email' => ['required', 'email'],
             'recipient_email' => ['required', 'email']
         ]);
 

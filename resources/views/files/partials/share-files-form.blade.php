@@ -1,6 +1,6 @@
 <section>
     <x-modal name="{{ $data->id }}" focusable>
-        <form method="POST" class="mt-6 p-5" action="{{ route('share.store', $data->id) }}">
+        <form method="POST" class="mt-6 p-5" action="{{ route('share.store', Crypt::encryptString($data->id)) }}">
             @csrf
 
             <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">
@@ -10,7 +10,6 @@
             <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
                 {{ __('When you share your file, you will always stay in control of the file. Delete the shared connection anytime you want on your shared page. You will always be the owner.') }}
             </p>
-            <input class="hidden" id="owner_email" name="owner_email" type="text" value="{{ auth()->user()->email }}">
             <x-text-input id="recipient_email" name="recipient_email" type="text" class="mt-6 block w-full"
                 placeholder="Email address" autocomplete="email" />
 
