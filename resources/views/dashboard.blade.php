@@ -36,6 +36,7 @@
                 <div class="grid grid-cols-1 sm:grid-cols-2">
                     <div class="bg-white dark:bg-gray-800 shadow rounded-lg p-5">
                         <div class="font-bold text-xl text-black dark:text-white mb-2">Recently Uploaded</div>
+                        <div class="mb-4">{{ $recent_files->links() }}</div>
                         @if ($recent_files->isEmpty())
                             <div class="">No Recent Files</div>
                         @else

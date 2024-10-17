@@ -60,7 +60,9 @@ class DataController extends Controller
 
         $recent_files = File::where('created_at', '>=', Carbon::now()->subDays(2))
             ->where('user_id', $userId)
-            ->get();
+            ->limit(25)
+            ->orderby('created_at', 'asc')
+            ->paginate(5);
 
         $savedFilesCount = File::withoutTrashed()->count();
         $removedFilesCount = File::onlyTrashed()->count();
