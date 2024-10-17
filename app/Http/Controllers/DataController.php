@@ -58,7 +58,7 @@ class DataController extends Controller
 
         $userId = auth()->user()->id;
 
-        $recent_files = File::where('created_at', '>=', Carbon::now()->subDays(1))
+        $recent_files = File::where('created_at', '>=', Carbon::now()->subDays(2))
             ->where('user_id', $userId)
             ->get();
 
