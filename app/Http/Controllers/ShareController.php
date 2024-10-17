@@ -75,7 +75,7 @@ class ShareController extends Controller
         }
     }
 
-    public function delete($id) //Maybe encrypt ID
+    public function delete($id)
     {
         $share = Share::findOrFail(Crypt::decryptString($id));
         $share->delete();
