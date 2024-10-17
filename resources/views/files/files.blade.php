@@ -13,6 +13,7 @@
                     @include('files.partials.upload-files-form')
                 </div>
             </div>
+            <div class="mt-4">{{ $files->links() }}</div>
             <div class="block sm:flex sm:flex-wrap gap-4">
                 @if ($files->isEmpty())
                     <div

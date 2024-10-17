@@ -12,8 +12,9 @@ class FileController extends Controller
 {
     public function read() 
     {
-        $files = File::where('user_id', auth()->id())->get();
-        return view('files.files', compact('files'));
+        $files = File::where('user_id', auth()->id())
+        ->paginate(20);
+    return view('files.files', compact('files'));
     }
 
     public function create()
