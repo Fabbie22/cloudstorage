@@ -62,7 +62,11 @@ class DataController extends Controller
             ->where('user_id', $userId)
             ->get();
 
-        return view('dashboard', compact('files', 'recent_files', 'userRegistrationData', 'fileTypesData', 'averageTimeSaved', 'averageTimePerMonth'));
+        $savedFilesCount = File::withoutTrashed()->count();
+        $removedFilesCount = File::onlyTrashed()->count();
+
+        
+        return view('dashboard', compact('files', 'recent_files', 'userRegistrationData', 'fileTypesData', 'averageTimeSaved', 'averageTimePerMonth', 'savedFilesCount', 'removedFilesCount'));
     }
 
     public function allUsers()

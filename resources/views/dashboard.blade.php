@@ -18,9 +18,12 @@
                 <div class="grid grid-cols-1 w-full sm:grid-cols-2 gap-4">
                     <div><canvas id="registration_chart"
                             class="bg-white rounded-lg shadow-md pr-4 pb-4 max-h-72 "></canvas></div>
-                    <div><canvas id="fileTypesChart" class="bg-white rounded-lg shadow-md pr-4 pb-4 max-h-72"></canvas>
+                    <div><canvas id="fileTypesChart" class="bg-white rounded-lg shadow-md pr-4 pb-4 max-h-72"></canvas></div>
 
                         <div class="mt-4"><canvas id="averageTimeChart"
+                                class="bg-white rounded-lg shadow-md pr-4 pb-4 max-h-72"></canvas>
+                        </div>
+                        <div class="mt-4"><canvas id="savedDeletedChart"
                                 class="bg-white rounded-lg shadow-md pr-4 pb-4 max-h-72"></canvas>
                         </div>
 
@@ -32,27 +35,29 @@
                             @if ($recent_files->isEmpty())
                                 <div class="">No Recent Files</div>
                             @else
-                            @foreach ($recent_files as $file)
-                                <div class=" flex justify-between p-4 bg-gray-800 dark:bg-gray-500 text-white font-semibold dark:hover:!bg-gray-700 hover:bg-gray-400 hover:text-black dark:hover:text-white rounded-lg mb-2">
-                                    <p>{{ basename($file->path) }} - {{ $file->created_at->format('d-m-Y H:i') }}</p>
-                                    <x-dropdown width="32">
-                                        <x-slot name="trigger">
-                                            <div class="ms-1 cursor-pointer">
-                                                <svg class="fill-current h-5 w-5" xmlns="http://www.w3.org/2000/svg"
-                                                    viewBox="0 0 24 24">
-                                                    <circle cx="12" cy="5" r="2" />
-                                                    <circle cx="12" cy="12" r="2" />
-                                                    <circle cx="12" cy="19" r="2" />
-                                                </svg>
-                                            </div>
-                                        </x-slot>
-                                        <x-slot name="content">
-                                            @include('files.partials.download-files-form')
-                                        </x-slot>
-                                    </x-dropdown>
-                                </div>
-                            @endforeach
-                        @endif
+                                @foreach ($recent_files as $file)
+                                    <div
+                                        class=" flex justify-between p-4 bg-gray-800 dark:bg-gray-500 text-white font-semibold dark:hover:!bg-gray-700 hover:bg-gray-400 hover:text-black dark:hover:text-white rounded-lg mb-2">
+                                        <p>{{ basename($file->path) }} - {{ $file->created_at->format('d-m-Y H:i') }}
+                                        </p>
+                                        <x-dropdown width="32">
+                                            <x-slot name="trigger">
+                                                <div class="ms-1 cursor-pointer">
+                                                    <svg class="fill-current h-5 w-5" xmlns="http://www.w3.org/2000/svg"
+                                                        viewBox="0 0 24 24">
+                                                        <circle cx="12" cy="5" r="2" />
+                                                        <circle cx="12" cy="12" r="2" />
+                                                        <circle cx="12" cy="19" r="2" />
+                                                    </svg>
+                                                </div>
+                                            </x-slot>
+                                            <x-slot name="content">
+                                                @include('files.partials.download-files-form')
+                                            </x-slot>
+                                        </x-dropdown>
+                                    </div>
+                                @endforeach
+                            @endif
             @endif
         </div>
     </div>
@@ -102,7 +107,7 @@
             const fileTypesData = {
                 labels: @json($fileTypesData->pluck('file_type')), // Extract file types
                 datasets: [{
-                    label: 'File Types Saved',
+                    label: 'File Type',
                     backgroundColor: [
                         'rgba(255, 99, 132, 0.3)',
                         'rgba(54, 162, 235, 0.3)',
@@ -134,7 +139,7 @@
                         },
                         title: {
                             display: true,
-                            text: 'Saving of File Types'
+                            text: 'File Types Used'
                         }
                     }
                 }
@@ -181,6 +186,44 @@
                 document.getElementById('averageTimeChart'),
                 averageTimeConfig
             );
+
+    const savedDeletedData = {
+        labels: ['Saved Files', 'Deleted Files'],
+        datasets: [{
+            label: 'Saved vs Deleted',
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.3)', // Color for saved files
+                'rgba(54, 162, 235, 0.3)'  // Color for deleted files
+            ],
+            borderColor: [
+                'rgba(255, 99, 132, 1)',   // Border color for saved files
+                'rgba(54, 162, 235, 1)'    // Border color for deleted files
+            ],
+            data: [{{ $savedFilesCount }}, {{ $removedFilesCount }}], // Counts for saved and deleted files
+        }]
+    };
+
+    const savedDeletedConfig = {
+        type: 'doughnut', // Specify donut chart type
+        data: savedDeletedData, // Data for the chart
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'top',
+                },
+                title: {
+                    display: true,
+                    text: 'File Status: Saved vs Deleted'
+                }
+            }
+        }
+    };
+
+    const savedDeletedChart = new Chart(
+        document.getElementById('savedDeletedChart'),
+        savedDeletedConfig // Use the correct variable name
+    );
         </script>
     @endpush
 
