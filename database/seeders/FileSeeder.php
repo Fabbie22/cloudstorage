@@ -14,9 +14,11 @@ class FileSeeder extends Seeder
         // Fetch the users created by UserSeeder
         $users = User::all();
 
+
         // Generate 500 fake files, distributed among the 100 users
         foreach ($users as $user) {
-            $files = File::factory()->count(5)->create(['user_id' => $user->id]); // Create 5 files for each user
+            $randomInteger = rand(5, 25);
+            $files = File::factory()->count($randomInteger)->create(['user_id' => $user->id]); // Create 5 files for each user
 
             // Share files with random users, ensuring no duplicate shares
             foreach ($files as $file) {
