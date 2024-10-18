@@ -18,8 +18,8 @@
                 @else
                     <div class="mb-4">
                         {{ $users->links() }}
-                        <p>{!! 'Currently we have: <strong>' . $usercount . '</strong> users' !!}</p>
-                        <p>{!! 'Who save all together: <strong>' . $filecount . '</strong> files'!!}</p>
+                        <p>{!! 'Currently we have: <strong>' . $userCount . '</strong> users' !!}</p>
+                        <p>{!! 'Who save all together: <strong>' . $fileCount . '</strong> files'!!}</p>
                     </div>
                     <table class="min-w-full table-auto rounded-lg shadow">
                         <thead class="bg-gray-800 dark:bg-gray-500 text-white font-semibold rounded-t-lg">

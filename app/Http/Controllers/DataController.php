@@ -143,7 +143,7 @@ class DataController extends Controller
      */
     private function getTopUsersWithFileCounts()
     {
-        $topN = 5;
+        $topN = 12;
         $usersWithFileCount = User::withCount('files')
             ->orderBy('files_count', 'desc')
             ->take($topN)
