@@ -10,129 +10,153 @@ class DataController extends Controller
 {
     public function dashboard_statistics()
     {
-        $files = File::all();
+        // Fetch core data for dashboard
+        $files = File::withTrashed()->get();
+        $userRegistrationData = $this->getUserRegistrationData();
+        $fileTypesData = $this->getFileTypesData($files);
+        $recentFiles = $this->getRecentFiles();
+        $savedFilesCount = File::withoutTrashed()->count();
+        $removedFilesCount = File::onlyTrashed()->count();
+        $totalFileSizeMB = $this->calculateTotalFileSize($files);
 
-        //Users registrated in 30 days time
-        $userRegistrationData = User::selectRaw('DATE(created_at) as date, COUNT(*) as aggregate')
+        // Age-based file statistics
+        list($ageLabels, $ageValues) = $this->getFileAgeData($files);
+
+        // Top users with file counts
+        list($userLabels, $fileCounts) = $this->getTopUsersWithFileCounts();
+
+        // Return view with all gathered data
+        return view('dashboard', compact(
+            'files',
+            'recentFiles',
+            'userRegistrationData',
+            'fileTypesData',
+            'savedFilesCount',
+            'removedFilesCount',
+            'totalFileSizeMB',
+            'ageLabels',
+            'ageValues',
+            'userLabels',
+            'fileCounts'
+        ));
+    }
+
+    public function allUsers()
+    {
+        // Fetch paginated users and summary counts
+        $users = User::paginate(20);
+        $userCount = User::count();
+        $fileCount = File::count();
+
+        return view('userlist', compact('users', 'userCount', 'fileCount'));
+    }
+
+    /**
+     * Fetches the number of users registered in the past 30 days.
+     */
+    private function getUserRegistrationData()
+    {
+        return User::selectRaw('DATE(created_at) as date, COUNT(*) as aggregate')
             ->where('created_at', '>=', now()->subDays(30))
             ->groupBy('date')
             ->orderBy('date')
             ->get();
+    }
 
+    /**
+     * Processes file type data.
+     */
+    private function getFileTypesData($files)
+    {
+        return $files->map(function ($file) {
+            return ['file_type' => pathinfo($file->path, PATHINFO_EXTENSION)];
+        })
+        ->groupBy('file_type')
+        ->map(function ($group) {
+            return count($group);
+        })
+        ->map(function ($count, $type) {
+            return ['file_type' => $type, 'total' => $count];
+        })
+        ->values();
+    }
 
-        $files = File::withTrashed()->get();
-
-        $fileTypesData = $files->map(function ($file) {
-            return [
-                'file_type' => pathinfo($file->path, PATHINFO_EXTENSION),
-            ];
-        })->groupBy('file_type')
-            ->map(function ($group) {
-                return count($group);
-            });
-
-        $fileTypesData = $fileTypesData->map(function ($count, $type) {
-            return [
-                'file_type' => $type,
-                'total' => $count,
-            ];
-        })->values();
-
-        // Calculate average time from creation to deletion (for trashed files only) by month
-        $deletedRecords = File::onlyTrashed()->get();
-
-
+    /**
+     * Retrieves recent files for the logged-in user from the past 2 days.
+     */
+    private function getRecentFiles()
+    {
         $userId = auth()->user()->id;
-
-        $recent_files = File::where('created_at', '>=', Carbon::now()->subDays(2))
+        return File::where('created_at', '>=', Carbon::now()->subDays(2))
             ->where('user_id', $userId)
             ->limit(25)
-            ->orderby('created_at', 'asc')
+            ->orderBy('created_at', 'asc')
             ->paginate(5);
+    }
 
-        //Count deleted and saved files
-        $savedFilesCount = File::withoutTrashed()->count();
-        $removedFilesCount = File::onlyTrashed()->count();
-
-        // Calculate total file size used in MB
+    /**
+     * Calculates total file size in MB for all non-trashed files.
+     */
+    private function calculateTotalFileSize($files)
+    {
         $totalFileSizeBytes = 0;
-        $files = File::withoutTrashed()->get(); // Get all saved files
 
-        foreach ($files as $file) {
-            $filePath = storage_path('app/public' . $file->path); // Assuming your files are stored in the storage/app directory
+        $savedFiles = File::withoutTrashed()->get();
+        foreach ($savedFiles as $file) {
+            $filePath = storage_path('app/public' . $file->path);
             if (file_exists($filePath)) {
-                $totalFileSizeBytes += filesize($filePath); // Add the file size to the total
+                $totalFileSizeBytes += filesize($filePath);
             }
         }
 
-        // Convert total file size from bytes to megabytes
-        $totalFileSizeMB = $totalFileSizeBytes / 1024;
+        return $totalFileSizeBytes / 1024; // Convert bytes to MB
+    }
 
-        $fileAges = [];
-        $ageLabels = []; // To hold labels for the chart
-        $ageValues = []; // To hold values for the chart
-
-        // Group files by age in months
+    /**
+     * Groups files by age and calculates how many fall into each age bracket.
+     */
+    private function getFileAgeData($files)
+    {
         $monthlyFileCounts = [];
-
-        // Get the current date
         $currentDate = Carbon::now();
 
         foreach ($files as $file) {
-            // Get the creation date
             $createdAt = Carbon::parse($file->created_at);
-
-            // Calculate the difference in months
             $diffInMonths = $createdAt->diffInMonths($currentDate);
 
-            // Determine the age label for the current file
-            if ($diffInMonths < 1) {
-                $ageLabel = 'Less than 1 month';
-            } else {
-                // Create age groups (0-1 months, 1-2 months, etc.)
-                $ageLabel = floor($diffInMonths) . '-' . ceil($diffInMonths) . ' months';
-            }
+            $ageLabel = $diffInMonths < 1 ? 'Less than 1 month' : floor($diffInMonths) . '-' . ceil($diffInMonths) . ' months';
 
-            // Increment the count for that age category
             if (!isset($monthlyFileCounts[$ageLabel])) {
                 $monthlyFileCounts[$ageLabel] = 0;
             }
             $monthlyFileCounts[$ageLabel]++;
         }
 
-        // Prepare labels and values for the chart
-        foreach ($monthlyFileCounts as $age => $count) {
-            $ageLabels[] = $age; // The age range as the label
-            $ageValues[] = $count;  // Number of files for that age range
-        }
+        $ageLabels = array_keys($monthlyFileCounts);
+        $ageValues = array_values($monthlyFileCounts);
 
-        // Retrieve users with file counts, ordered by the count of files, limiting to the top N users
-        $topN = 5; // Change this to the number of top users you want
+        return [$ageLabels, $ageValues];
+    }
+
+    /**
+     * Fetches top users based on the number of files they have uploaded.
+     */
+    private function getTopUsersWithFileCounts()
+    {
+        $topN = 5;
         $usersWithFileCount = User::withCount('files')
-            ->orderBy('files_count', 'desc') // Order by file count in descending order
-            ->take($topN) // Limit to top N users
+            ->orderBy('files_count', 'desc')
+            ->take($topN)
             ->get();
 
         $userLabels = [];
         $fileCounts = [];
 
-        // Prepare labels and values for the chart
         foreach ($usersWithFileCount as $user) {
-            $userLabels[] = $user->name; // Assuming 'name' is the field for user identification
-            $fileCounts[] = $user->files_count; // This gives the count of files per user
+            $userLabels[] = $user->name;
+            $fileCounts[] = $user->files_count;
         }
 
-        return view('dashboard', compact('files', 'recent_files', 'userRegistrationData', 'fileTypesData',  'savedFilesCount', 'removedFilesCount', 'totalFileSizeMB', 'fileAges', 'ageLabels', 'ageValues', 'usersWithFileCount', 'userLabels', 'fileCounts'));
-    }
-
-    public function allUsers()
-    {
-        $users = User::paginate(20);
-
-        $usercount = User::count();
-
-        $filecount = File::count();
-
-        return view('userlist', compact('users', 'usercount', 'filecount'));
+        return [$userLabels, $fileCounts];
     }
 }
