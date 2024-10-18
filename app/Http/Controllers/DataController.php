@@ -71,20 +71,20 @@ class DataController extends Controller
         $fileAges = [];
         $ageLabels = []; // To hold labels for the chart
         $ageValues = []; // To hold values for the chart
-        
+
         // Group files by age in months
         $monthlyFileCounts = [];
-        
+
         // Get the current date
         $currentDate = Carbon::now();
-        
+
         foreach ($files as $file) {
             // Get the creation date
             $createdAt = Carbon::parse($file->created_at);
-            
+
             // Calculate the difference in months
             $diffInMonths = $createdAt->diffInMonths($currentDate);
-            
+
             // Determine the age label for the current file
             if ($diffInMonths < 1) {
                 $ageLabel = 'Less than 1 month';
@@ -92,23 +92,37 @@ class DataController extends Controller
                 // Create age groups (0-1 months, 1-2 months, etc.)
                 $ageLabel = floor($diffInMonths) . '-' . ceil($diffInMonths) . ' months';
             }
-            
+
             // Increment the count for that age category
             if (!isset($monthlyFileCounts[$ageLabel])) {
                 $monthlyFileCounts[$ageLabel] = 0;
             }
             $monthlyFileCounts[$ageLabel]++;
         }
-        
+
         // Prepare labels and values for the chart
         foreach ($monthlyFileCounts as $age => $count) {
             $ageLabels[] = $age; // The age range as the label
             $ageValues[] = $count;  // Number of files for that age range
         }
-        
 
+        // Retrieve users with file counts, ordered by the count of files, limiting to the top N users
+        $topN = 5; // Change this to the number of top users you want
+        $usersWithFileCount = User::withCount('files')
+            ->orderBy('files_count', 'desc') // Order by file count in descending order
+            ->take($topN) // Limit to top N users
+            ->get();
 
-        return view('dashboard', compact('files', 'recent_files', 'userRegistrationData', 'fileTypesData',  'savedFilesCount', 'removedFilesCount', 'totalFileSizeMB', 'fileAges', 'ageLabels', 'ageValues'));
+        $userLabels = [];
+        $fileCounts = [];
+
+        // Prepare labels and values for the chart
+        foreach ($usersWithFileCount as $user) {
+            $userLabels[] = $user->name; // Assuming 'name' is the field for user identification
+            $fileCounts[] = $user->files_count; // This gives the count of files per user
+        }
+
+        return view('dashboard', compact('files', 'recent_files', 'userRegistrationData', 'fileTypesData',  'savedFilesCount', 'removedFilesCount', 'totalFileSizeMB', 'fileAges', 'ageLabels', 'ageValues', 'usersWithFileCount', 'userLabels', 'fileCounts'));
     }
 
     public function allUsers()

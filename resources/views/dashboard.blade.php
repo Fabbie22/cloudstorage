@@ -27,6 +27,9 @@
                     <div class="mt-4"><canvas id="savedDeletedChart"
                             class="bg-white rounded-lg shadow-md pr-4 pb-4 max-h-72"></canvas>
                     </div>
+                    <div class="mt-4"><canvas id="fileCountsChart"
+                            class="bg-white rounded-lg shadow-md pr-4 pb-4 max-h-72"></canvas>
+                    </div>
                     <div style="text-align: center; margin-top: 20px;">
                         <h2>Total File Size Used: {{ number_format($totalFileSizeMB, 2) }} KB</h2>
                     </div>
@@ -235,6 +238,49 @@
                 document.getElementById('fileAgesChart'),
                 fileAgesConfig
             );
+// Data for the file count chart (bar chart example)
+const fileCountsData = {
+    labels: @json($userLabels), // Extract user names from the updated PHP code
+    datasets: [{
+        label: 'Number of Files per User',
+        backgroundColor: 'rgba(75, 192, 192, 0.3)',
+        borderColor: 'rgba(75, 192, 192, 1)',
+        borderWidth: 1,
+        data: @json($fileCounts), // Extract number of files per user
+    }]
+};
+
+const fileCountsConfig = {
+    type: 'bar', // Change to 'pie', 'line', etc. as needed
+    data: fileCountsData,
+    options: {
+        responsive: true,
+        scales: {
+            y: {
+                beginAtZero: true,
+                title: {
+                    display: true,
+                    text: 'Number of Files'
+                }
+            }
+        },
+        plugins: {
+            legend: {
+                position: 'top',
+            },
+            title: {
+                display: true,
+                text: 'Number of Files per User'
+            }
+        }
+    }
+};
+
+const fileCountsChart = new Chart(
+    document.getElementById('fileCountsChart'),
+    fileCountsConfig
+);
+
         </script>
     @endpush
 
