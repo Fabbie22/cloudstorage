@@ -41,20 +41,6 @@ class DataController extends Controller
         // Calculate average time from creation to deletion (for trashed files only) by month
         $deletedRecords = File::onlyTrashed()->get();
 
-        $averageTimePerMonth = $deletedRecords->groupBy(function ($record) {
-            return Carbon::parse($record->deleted_at)->format('m-Y'); // Group by month
-        })->map(function ($group) {
-            $daysDiff = $group->map(function ($record) {
-                return $record->created_at->diffInDays($record->deleted_at); // Calculate days between creation and deletion
-            });
-            return $daysDiff->isNotEmpty() ? $daysDiff->avg() : 0; // Calculate average per month
-        });
-
-        // Overall average deletion time
-        $overallData = $deletedRecords->map(function ($record) {
-            return $record->created_at->diffInDays($record->deleted_at); // Calculate days between creation and deletion
-        });
-        $averageTimeSaved = $overallData->isNotEmpty() ? $overallData->avg() : 0;
 
         $userId = auth()->user()->id;
 
@@ -64,6 +50,7 @@ class DataController extends Controller
             ->orderby('created_at', 'asc')
             ->paginate(5);
 
+        //Count deleted and saved files
         $savedFilesCount = File::withoutTrashed()->count();
         $removedFilesCount = File::onlyTrashed()->count();
 
@@ -79,9 +66,49 @@ class DataController extends Controller
         }
 
         // Convert total file size from bytes to megabytes
-        $totalFileSizeMB = $totalFileSizeBytes / 1024; 
+        $totalFileSizeMB = $totalFileSizeBytes / 1024;
 
-        return view('dashboard', compact('files', 'recent_files', 'userRegistrationData', 'fileTypesData', 'averageTimeSaved', 'averageTimePerMonth', 'savedFilesCount', 'removedFilesCount', 'totalFileSizeMB'));
+        $fileAges = [];
+        $ageLabels = []; // To hold labels for the chart
+        $ageValues = []; // To hold values for the chart
+        
+        // Group files by age in months
+        $monthlyFileCounts = [];
+        
+        // Get the current date
+        $currentDate = Carbon::now();
+        
+        foreach ($files as $file) {
+            // Get the creation date
+            $createdAt = Carbon::parse($file->created_at);
+            
+            // Calculate the difference in months
+            $diffInMonths = $createdAt->diffInMonths($currentDate);
+            
+            // Determine the age label for the current file
+            if ($diffInMonths < 1) {
+                $ageLabel = 'Less than 1 month';
+            } else {
+                // Create age groups (0-1 months, 1-2 months, etc.)
+                $ageLabel = floor($diffInMonths) . '-' . ceil($diffInMonths) . ' months';
+            }
+            
+            // Increment the count for that age category
+            if (!isset($monthlyFileCounts[$ageLabel])) {
+                $monthlyFileCounts[$ageLabel] = 0;
+            }
+            $monthlyFileCounts[$ageLabel]++;
+        }
+        
+        // Prepare labels and values for the chart
+        foreach ($monthlyFileCounts as $age => $count) {
+            $ageLabels[] = $age; // The age range as the label
+            $ageValues[] = $count;  // Number of files for that age range
+        }
+        
+
+
+        return view('dashboard', compact('files', 'recent_files', 'userRegistrationData', 'fileTypesData',  'savedFilesCount', 'removedFilesCount', 'totalFileSizeMB', 'fileAges', 'ageLabels', 'ageValues'));
     }
 
     public function allUsers()

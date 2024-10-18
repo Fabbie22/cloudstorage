@@ -21,7 +21,7 @@
                     <div><canvas id="fileTypesChart" class="bg-white rounded-lg shadow-md pr-4 pb-4 max-h-72"></canvas>
                     </div>
 
-                    <div class="mt-4"><canvas id="averageTimeChart"
+                    <div class="mt-4"><canvas id="fileAgesChart"
                             class="bg-white rounded-lg shadow-md pr-4 pb-4 max-h-72"></canvas>
                     </div>
                     <div class="mt-4"><canvas id="savedDeletedChart"
@@ -155,43 +155,6 @@
                 fileTypesConfig
             );
 
-            const averageTimeData = {
-                labels: @json($averageTimePerMonth->keys()), // Month labels (e.g., '2024-10')
-                datasets: [{
-                    label: 'Average Days Files Are Saved',
-                    backgroundColor: 'rgba(153, 102, 255, 0.3)',
-                    borderColor: 'rgba(153, 102, 255, 1)',
-                    data: @json($averageTimePerMonth->values()), // Average days for each month
-                }]
-            };
-
-            const averageTimeConfig = {
-                type: 'bar',
-                data: averageTimeData,
-                options: {
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            title: {
-                                display: true,
-                                text: 'Days'
-                            }
-                        }
-                    },
-                    plugins: {
-                        title: {
-                            display: true,
-                            text: 'Average Days Files Are Saved Before Deletion (Per Month)'
-                        }
-                    }
-                }
-            };
-
-            const averageTimeChart = new Chart(
-                document.getElementById('averageTimeChart'),
-                averageTimeConfig
-            );
-
             const savedDeletedData = {
                 labels: ['Saved Files', 'Deleted Files'],
                 datasets: [{
@@ -228,6 +191,49 @@
             const savedDeletedChart = new Chart(
                 document.getElementById('savedDeletedChart'),
                 savedDeletedConfig // Use the correct variable name
+            );
+
+            // Data for the file ages chart (bar chart example)
+            const fileAgesData = {
+                labels: @json($ageLabels), // Extract file names or IDs
+                datasets: [{
+                    label: 'File Age in Days',
+                    backgroundColor: 'rgba(75, 192, 192, 0.3)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1,
+                    data: @json($ageValues), // Extract age in days
+                }]
+            };
+
+            const fileAgesConfig = {
+                type: 'bar', // Change to 'pie', 'line', etc. as needed
+                data: fileAgesData,
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Age (Days)'
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        title: {
+                            display: true,
+                            text: 'Ages of Files'
+                        }
+                    }
+                }
+            };
+
+            const fileAgesChart = new Chart(
+                document.getElementById('fileAgesChart'),
+                fileAgesConfig
             );
         </script>
     @endpush
