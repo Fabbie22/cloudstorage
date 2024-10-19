@@ -39,11 +39,11 @@
                 <div class="grid grid-cols-1 sm:grid-cols-2">
                     <div class="bg-white dark:bg-gray-800 shadow rounded-lg p-5">
                         <div class="font-bold text-xl text-black dark:text-white mb-2">Recently Uploaded</div>
-                        <div class="mb-4">{{ $recent_files->links() }}</div>
-                        @if ($recent_files->isEmpty())
+                        <div class="mb-4">{{ $recentFiles->links() }}</div>
+                        @if ($recentFiles->isEmpty())
                             <div class="">No Recent Files</div>
                         @else
-                            @foreach ($recent_files as $file)
+                            @foreach ($recentFiles as $file)
                                 <div
                                     class=" flex justify-between p-4 bg-gray-800 dark:bg-gray-500 text-white font-semibold dark:hover:!bg-gray-700 hover:bg-gray-400 hover:text-black dark:hover:text-white rounded-lg mb-2">
                                     <p>{{ basename($file->path) }} - {{ $file->created_at->format('d-m-Y H:i') }}
