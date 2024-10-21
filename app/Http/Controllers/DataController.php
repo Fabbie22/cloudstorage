@@ -107,7 +107,7 @@ class DataController extends Controller
         }
 
         // Retrieve users with file counts, ordered by the count of files, limiting to the top N users
-        $topN = 5; // Change this to the number of top users you want
+        $topN = 25; // Change this to the number of top users you want
         $usersWithFileCount = User::withCount('files')
             ->orderBy('files_count', 'desc') // Order by file count in descending order
             ->take($topN) // Limit to top N users
