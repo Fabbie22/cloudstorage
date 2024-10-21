@@ -132,14 +132,18 @@ class DataController extends Controller
             $monthlyFileCounts[$ageLabel]++;
         }
 
-        // Prepare labels and values for the chart
-        foreach ($monthlyFileCounts as $age => $count) {
-            $ageLabels[] = $age; // The age range as the label
-            $ageValues[] = $count;  // Number of files for that age range
-        }
+        $ageLabels = array_keys($monthlyFileCounts);
+        $ageValues = array_values($monthlyFileCounts);
 
-        // Retrieve users with file counts, ordered by the count of files, limiting to the top N users
-        $topN = 25; // Change this to the number of top users you want
+        return [$ageLabels, $ageValues];
+    }
+
+    /**
+     * Fetches top users based on the number of files they have uploaded.
+     */
+    private function getTopUsersWithFileCounts()
+    {
+        $topN = 25;
         $usersWithFileCount = User::withCount('files')
             ->orderBy('files_count', 'desc')
             ->take($topN)
