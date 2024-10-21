@@ -13,7 +13,7 @@ class FileController extends Controller
     public function read() 
     {
         $files = File::where('user_id', auth()->id())
-        ->paginate(20);
+        ->paginate(21);
     return view('files.files', compact('files'));
     }
 
