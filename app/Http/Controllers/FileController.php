@@ -25,15 +25,18 @@ class FileController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'file' => ['required', 'file', 'max:2048'],
+            'files.*' => ['required', 'file', 'max:2048'],
         ]);
 
         $userId = auth()->id();
 
         $destinationPath = "files/{$userId}";
 
-        $file = $request->file('file');
+        $files = $request->file('files');
 
+
+        foreach($files as $file)
+        {
         $extension = $file->getClientOriginalExtension();
         $baseFilename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
         $finalFilename = "{$baseFilename}.{$extension}";
@@ -50,6 +53,7 @@ class FileController extends Controller
         $fileRecord->path = $filePath;
         $fileRecord->user_id = $userId;
         $fileRecord->save();
+    }
 
         return redirect(route('files'))->with('status', 'files-uploaded');
     }

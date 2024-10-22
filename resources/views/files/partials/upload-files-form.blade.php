@@ -4,7 +4,7 @@
 
         <div class="flex items-center gap-2">
         <div>
-            <x-upload-file id="file" name="file" />
+            <x-upload-file id="file" name="files[]" multiple />
         </div>
 
             <x-primary-button>{{ __('Upload') }}</x-primary-button>
