@@ -89,9 +89,8 @@ class DataController extends Controller
         $userId = auth()->user()->id;
         return File::where('created_at', '>=', Carbon::now()->subDays(2))
             ->where('user_id', $userId)
-            ->limit(25)
             ->orderBy('created_at', 'asc')
-            ->paginate(5);
+            ->simplePaginate(5);
     }
 
     /**
