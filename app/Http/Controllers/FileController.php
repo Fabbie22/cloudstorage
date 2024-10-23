@@ -34,7 +34,10 @@ class FileController extends Controller
 
         $files = $request->file('files');
 
-
+        if($files === NULL)
+        {
+           return redirect('files')->with('status', 'no-files-found');
+        }
         foreach($files as $file)
         {
         $extension = $file->getClientOriginalExtension();

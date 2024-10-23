@@ -35,6 +35,12 @@
                 </div>
             @break
 
+            @case('no-files-found')
+                <div class="w-full bg-red-500 p-5 rounded-lg mb-4">
+                    <p class="text-lg font-semibold text-white">{{ __('No files found!') }}</p>
+                </div>
+            @break
+
             @case('recipient-not-found')
                 <div class="w-full bg-red-500 p-5 rounded-lg mb-4">
                     <p class="text-lg font-semibold text-white">{{ __('This email does not exist!') }}</p>
