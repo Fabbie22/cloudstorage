@@ -80,6 +80,6 @@ class ShareController extends Controller
         $share = Share::findOrFail(Crypt::decryptString($id));
         $share->delete();
 
-        return redirect()->route('share')->with('status', 'share-deleted');
+        return redirect()->back()->with('status', 'share-deleted');
     }
 }

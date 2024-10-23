@@ -7,6 +7,12 @@
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 dark:text-white">
+            @if (session('status') === 'share-deleted')
+                <div class="w-full bg-green-500 p-5 rounded-lg mb-4" x-data="{ show: true }" x-show="show" x-transition
+                    x-init="setTimeout(() => show = false, 2000)">
+                    <p class="text-lg font-semibold text-white">{{ __('Share deleted successfully!') }}</p>
+                </div>
+            @endif
             @if ($shared_with_me->isEmpty())
                 <div
                     class="bg-white dark:bg-gray-800 mt-4 p-5 w-full text-center rounded-lg border-5 border-indigo-800 shadow">
@@ -51,6 +57,7 @@
 
                                         <x-slot name="content">
                                             @include('shared.partials.download-shared-me-files-form')
+                                            @include('shared.partials.delete-shared-files-form')
                                         </x-slot>
                                     </x-dropdown>
                                 </td>
