@@ -78,6 +78,10 @@
                 @foreach ($files as $file => $data)
                     @include('files.partials.share-files-form')
                 @endforeach
+
+                @foreach ($files as $file => $data )
+                    @include('files.partials.delete-files-confirmation')
+                @endforeach
             </div>
         </div>
     </div>

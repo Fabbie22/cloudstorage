@@ -1,12 +1,6 @@
 <section>
-    <form method="POST" action="{{ route('files.delete', Crypt::encryptString($file->id)) }}">
-        @csrf
-        @method('DELETE')
-
-        <x-dropdown-link :href="route('files.delete', $file->id)"
-            onclick="event.preventDefault();
-                                                this.closest('form').submit();">
-            <i class="fas fa-trash mr-2"></i>{{ __('Delete') }}
+        <x-dropdown-link class="cursor-pointer" x-data=""
+            x-on:click.prevent="$dispatch('open-modal', '{{ basename($file->path) . 'name=' . basename($file->path)  }}')">
+            <i class="fas fa-trash mr-2"></i>{{ 'Delete' }}
         </x-dropdown-link>
-    </form>
 </section>
