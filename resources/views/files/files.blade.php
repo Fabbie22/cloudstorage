@@ -11,7 +11,7 @@
             <div class="p-4 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg">
                 <div class="flex max-w-xl items-center">
                     @include('files.partials.upload-files-form')
-
+                @if ($files->isNotEmpty())
                     <div class="flex items-center">
                         <x-input-label for="extension" class="ml-4 mr-4">Filter by Extension:</x-input-label>
                         <select name="extension" id="extension" onchange="fileFilter()"
@@ -25,6 +25,7 @@
                         </select>
 
                     </div>
+                @endif
                 </div>
 
             </div>
