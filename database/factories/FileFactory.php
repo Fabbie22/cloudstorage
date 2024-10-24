@@ -48,6 +48,7 @@ class FileFactory extends Factory
         return [
             'path' => '/files/' . $user->id . '/' . $filename, // Store the relative path in the database
             'user_id' => $user->id, // Use the selected user's ID
+            'created_at' => fake()->dateTimeBetween('-1 year', 'now'),
         ];
     }
     

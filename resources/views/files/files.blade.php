@@ -15,13 +15,15 @@
                     <div class="flex items-center">
                         <x-input-label for="extension" class="ml-4 mr-4">Filter by Extension:</x-input-label>
                         <select name="extension" id="extension" onchange="fileFilter()"
-                            class="border border-gray-300 rounded px-8">
-                            <option value="">All</option>
+                            class="border border-gray-300 rounded px-8 bg-white text-black dark:bg-gray-800 dark:text-white dark:border-gray-600">
+                            <option class="text-black dark:text-white" value="">All</option>
                             @foreach ($files as $extension)
                                 {{ $extension_name = pathinfo($extension->path, PATHINFO_EXTENSION) }}
-                                <option value="{{ $extension_name }}">{{ $extension_name }}</option>
+                                <option class="text-black dark:text-white" value="{{ $extension_name }}">
+                                    {{ $extension_name }}</option>
                             @endforeach
                         </select>
+
                     </div>
                 </div>
 
