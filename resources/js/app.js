@@ -44,3 +44,18 @@ themeToggleBtn.addEventListener("click", function () {
         }
     }
 });
+
+window.fileFilter = function () {
+    var selectedExtension = document.getElementById('extension').value;
+    var fileItems = document.querySelectorAll('.file-item');
+
+    fileItems.forEach(function (file) {
+        var fileExtension = file.getAttribute('data-extension');
+        if (selectedExtension === "" || fileExtension === selectedExtension) {
+            file.classList.remove('hidden');
+        } else {
+            file.classList.add('hidden');
+        }
+    });
+};
+  

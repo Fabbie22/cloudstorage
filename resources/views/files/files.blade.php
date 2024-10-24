@@ -9,11 +9,26 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 dark:text-white">
             @include('files.partials.notification-info')
             <div class="p-4 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg">
-                <div class="max-w-xl">
+                <div class="flex max-w-xl items-center">
                     @include('files.partials.upload-files-form')
+
+                    <div class="flex items-center">
+                        <x-input-label for="extension" class="ml-4 mr-4">Filter by Extension:</x-input-label>
+                        <select name="extension" id="extension" onchange="fileFilter()"
+                            class="border border-gray-300 rounded px-8">
+                            <option value="">All</option>
+                            @foreach ($files as $extension)
+                                {{ $extension_name = pathinfo($extension->path, PATHINFO_EXTENSION) }}
+                                <option value="{{ $extension_name }}">{{ $extension_name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
                 </div>
+
             </div>
+
             <div class="mt-4">{{ $files->links() }}</div>
+
             <div class="block sm:flex sm:flex-wrap gap-4">
                 @if ($files->isEmpty())
                     <div
@@ -23,10 +38,10 @@
                     </div>
                 @else
                     @foreach ($files as $file)
-                        <div class="sm:flex-2 block items-center justify-between mt-3">
+                        <div class="file-item sm:flex-2 block items-center justify-between mt-3"
+                            data-extension="{{ pathinfo($file->path, PATHINFO_EXTENSION) }}">
                             <div
                                 class="flex justify-between bg-gray-800 dark:bg-gray-500 p-3 rounded-lg text-white font-semibold dark:hover:!bg-gray-700 hover:bg-gray-400 hover:text-black dark:hover:text-white">
-
                                 <p>{{ basename($file->path) }}</p>
 
                                 <x-dropdown width="32">
@@ -42,7 +57,6 @@
                                     </x-slot>
 
                                     <x-slot name="content">
-
                                         @include('files.partials.download-files-form')
 
                                         <x-dropdown-link class="cursor-pointer" x-data=""
@@ -51,18 +65,16 @@
                                         </x-dropdown-link>
 
                                         @include('files.partials.delete-files-form')
-
                                     </x-slot>
                                 </x-dropdown>
                             </div>
-
                         </div>
                     @endforeach
                 @endif
+
                 @foreach ($files as $file => $data)
                     @include('files.partials.share-files-form')
                 @endforeach
-
             </div>
         </div>
     </div>
